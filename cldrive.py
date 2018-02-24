@@ -1,14 +1,10 @@
-import os, sys
+import sys
+from command_prompt import ClDrivePrompt, credentials
 
-def executeCommand(command):
-    
-
-def main()
-    while(True):
-        command = input("[ClDrive]> ")
-        executeCommand(command)
-
-
+def main():
+    prompt= ClDrivePrompt() 
+    prompt.prompt = "[ClDrive]> "
+    prompt.cmdloop()
 
 
 if __name__ == '__main__':

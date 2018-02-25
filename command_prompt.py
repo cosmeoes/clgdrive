@@ -1,39 +1,83 @@
 from cmd import Cmd
-import sys
-import httplib2
-from apiclient import discovery
-from getAuth import get_credentials
-#get the credentials for google drive 
-credentials = get_credentials() 
+from argparse import ArgumentParser
+from wrapper_cmd_argparser import WrapperCmdLineArgParser
+import sys, os
+import drive
 
 class ClDrivePrompt(Cmd):
+    
+    @WrapperCmdLineArgParser()
+    def do_push(self, args, parsed, getparser=False):
+        if(getparser):
+            parser = ArgumentParser(prog="push")
+            parser.add_argument("files", nargs='+', help="the files to upload")
+            parser.add_argument("-r","--recursive", help="upload a directory recursively", action="store_true")
+            return parser
 
-    def do_ls(self, args):
-        """ls: lists the files in a directory, it takes as a parameter the directory path. 
-        if the path isn't given, it list the files in the current directory"""
-
-        if(len(args)>0):
-            print('thats a nice directroy you have there, but i don\'t know how to do that yet')
+        if(parsed.recursive):
+            for directory in parsed.files:
+                if(os.path.isdir(directory)):
+                    drive.push_dir(directory)
+                else:
+                    print("%s is not a directory" % directory)
         else:
-            http = credentials.authorize(httplib2.Http())
-            service = discovery.build('drive', 'v3', http=http)
+            drive.push_files(parsed.files)
 
-            results = service.files().list(
-                pageSize=10,fields="nextPageToken, files(id, name)").execute()
-            items = results.get('files', [])
-            if not items:
-                print('No files found.')
-            else:
-                print('Files:')
-                for item in items:
-                    sys.stdout.buffer.write(('{0} ({1})\n'.format(item['name'], item['id']).encode('utf-8')))
+    @WrapperCmdLineArgParser()
+    def do_cd(self, args, parsed, getparser=False):
+        if(getparser):
+            parser = ArgumentParser(prog="cd")
+            parser.add_argument("dir",nargs="?", help="Change the working directory")
+            return parser
+        
+        if(not parsed.dir):
+            self.prompt = "[MyDrive]> "
+            drive.cwd_id = 'root'
+            drive.cwd_name = 'MyDrive'
+            drive.cwd_parent = 'root'
+            return
+        if(parsed.dir == ".."):
+            parent = drive.get_folder_parent_and_name(drive.cwd_parent)
+            self.prompt = "["+parent['name']+"]> "
+            drive.cwd_id = drive.cwd_parent
+            drive.cwd_name = parent['name']
+            drive.cwd_parent = parent['parent']
+            return
+
+
+        folder = drive.find_folder_id(parsed.dir)
+        if(folder):
+            self.prompt = "["+parsed.dir+"]> "
+            drive.cwd_id = folder['id']
+            drive.cwd_name = folder['name']
+            drive.cwd_parent = folder['parent']
+        else: 
+            print("%s isn't a directory" % parsed.dir)
+
+    @WrapperCmdLineArgParser()
+    def do_ls(self, args, parsed, getparser=False):
+        if(getparser):
+            parser = ArgumentParser(prog="ls")
+            parser.add_argument("dir", nargs='?', help="the directory to list")
+            return parser
+
+        if(parsed.dir):
+            folder = drive.find_folder_id(parsed.dir)
+            if(folder):
+                drive.list(folder['id'])
+            else:    
+                print("%s isn't a directory" % parsed.dir)
+        else:
+            drive.list(drive.cwd_id)
 
     def do_quit(self,args):
         """quit: Quits the program"""
-        print('\nbye...')
+        print('bye...')
         sys.exit(0)
 
     def do_exit(self, args):
         """exit: Quits the program"""
         self.do_quit(args)
-     
+   
+    def do_EOF(self, args):
+        self.do_quit(args)

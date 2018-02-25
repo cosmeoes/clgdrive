@@ -1,15 +1,19 @@
 import sys
-from command_prompt import ClDrivePrompt, credentials
+from command_prompt import ClDrivePrompt
+import drive
 
 def main():
     prompt= ClDrivePrompt() 
-    prompt.prompt = "[ClDrive]> "
+    prompt.prompt = "["+drive.cwd_name+"]> "
     prompt.cmdloop()
 
-
-if __name__ == '__main__':
+def catch_ctrl_c():
     try:
         main()
     except KeyboardInterrupt:
-        print ('bye..')
-        sys.exit(0)
+        print('\n')
+        catch_ctrl_c()
+
+
+if __name__ == '__main__':
+    catch_ctrl_c()

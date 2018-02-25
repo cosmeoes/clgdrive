@@ -7,7 +7,7 @@ import argparse
 
 # If modifying these scopes, delete your previously saved credentials
 # at ~/.credentials/drive-python-quickstart.json
-SCOPES = 'https://www.googleapis.com/auth/drive.metadata.readonly'
+SCOPES = 'https://www.googleapis.com/auth/drive'
 CLIENT_SECRET_FILE = 'client_secret.json'
 APPLICATION_NAME = 'cldrive'
 

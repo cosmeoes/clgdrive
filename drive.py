@@ -1,19 +1,20 @@
-import httplib2, sys, os
+import httplib2, sys, os, io
 import magic 
 from apiclient import discovery, errors
 from getAuth import get_credentials
-from apiclient.http import MediaFileUpload 
+from apiclient.http import MediaFileUpload, MediaIoBaseDownload
 #get the credentials for google drive 
 credentials = get_credentials() 
 cwd_id = "root"
 cwd_name = "MyDrive"
 cwd_parent = "root"
-def list(folder):
+
+def list(folder, trashed="false", sharedWithme=False):
     service = get_service()
     page_token = None
 
     while True:
-        response = service.files().list(q="'"+folder+"' in parents",
+        response = service.files().list(q="'"+folder+"' in parents and trashed = "+trashed+(" and sharedWithMe" if sharedWithme else ""),
                                               spaces='drive',
                                               fields='nextPageToken, files(id, name)',
                                               pageToken=page_token).execute()
@@ -27,6 +28,8 @@ def list(folder):
             sys.stdout.write('\rPress enter to continue listing files or Ctrl+c to quit')
             sys.stdout.flush()
             input()
+
+
 
 def share_callback(request_id, response, exception):
     if exception:
@@ -92,7 +95,7 @@ def push_file(filename, parent=None):
                     exponetialBackoff(uploadtry)
                     continue;
                 else:
-                    print("File not uploaded: %s" % filename, e)
+                    print("Error: %s not downloaded" % filename, e)
                     return;
             if status:
                 progress = int(status.progress() * 100)
@@ -132,6 +135,46 @@ def push_dir(directory, parent=None):
             push_dir(filepath, folderid)
         else:
             push_file(filepath, folderid)
+
+
+def pull_file(filename, topath="./"):
+    file_id = find_file_id(filename)['id']
+    service = get_service()
+    request = service.files().get_media(fileId=file_id)
+    fh = io.BytesIO()
+    downloader = MediaIoBaseDownload(fh, request)
+    done = False
+    downloadtry = 0
+    while done is False:
+        try:
+            status, done = downloader.next_chunk()
+        except errors.HttpError as e:
+            if(e.resp.status in [404]):
+                # Start the upload all over again.
+                print("An error ocurred, restarting download")
+                pull_file(filename)
+            elif(e.resp.status in [500, 502, 503, 504] and uploadtry < 6):
+                # Call next_chunk() again, but use an exponential backoff for repeated errors.
+                downloadtry += 1
+                exponetialBackoff(downloadtry)
+                continue;
+            else:
+                print("Error: %s not downloaded" % filename, e)
+                return;
+        
+        progress = int(status.progress() * 100)
+        sys.stdout.write("\rDownloading %s: %d%%" % (filename, progress))
+        sys.stdout.flush()
+
+    sys.stdout.write("%s downloaded\n" % filename)
+    fileToWrite = topath if os.path.basename(topath) and not os.path.isdir(topath) else os.path.join(topath, filename)
+    with open(fileToWrite, 'wb') as file:
+        file.write(fh.getvalue())
+
+def pull_files(filelist, topath="./"):
+    for file in filelist:
+        pull_file(file, topath)
+
 
 def get_service():
     http = credentials.authorize(httplib2.Http())        

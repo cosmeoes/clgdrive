@@ -24,6 +24,22 @@ class ClDrivePrompt(Cmd):
             drive.push_files(parsed.files)
 
     @WrapperCmdLineArgParser()
+    def do_pull(self, args, parsed, getparser=False):
+        if(getparser):
+            parser =ArgumentParser(prog="pull")
+            parser.add_argument("files", nargs='+', help="Files to download")
+            parser.add_argument("-d","--directory", metavar="directory", help="Specify where to save the file")
+            return parser
+        if(parsed.directory):
+            if(not os.path.exists(os.path.dirname(parsed.directory))):
+                print("Can't find %s" % parsed.directory)
+                return
+            drive.pull_files(parsed.files,parsed.directory)
+        else:
+            drive.pull_files(parsed.files)
+
+
+    @WrapperCmdLineArgParser()
     def do_cd(self, args, parsed, getparser=False):
         if(getparser):
             parser = ArgumentParser(prog="cd")

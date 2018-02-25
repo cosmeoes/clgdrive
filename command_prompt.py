@@ -70,6 +70,17 @@ class ClDrivePrompt(Cmd):
         else:
             drive.list(drive.cwd_id)
 
+    @WrapperCmdLineArgParser()
+    def do_share(self, args, parsed, getparser=False):
+        if(getparser):
+            parser = ArgumentParser(prog="share")
+            parser.add_argument("files", help="The file to share")
+            parser.add_argument("emails", nargs='+', help="The people you want to share the file with")
+            return parser
+
+        drive.share_file(parsed.files, parsed.emails)
+
+
     def do_quit(self,args):
         """quit: Quits the program"""
         print('bye...')

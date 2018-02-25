@@ -28,39 +28,33 @@ def list(folder):
             sys.stdout.flush()
             input()
 
-            
-def find_folder_id(name):
-    service = get_service()
-    response = service.files().list(q="name='"+name+"' and '"+cwd_id
-                                    +"' in parents and mimeType='application/vnd.google-apps.folder'",
-                                    fields='files(id, name, createdTime, parents)').execute()
-    folders = []
-    for file in response.get('files', []):
-        folders.append({'id': file.get('id'),'name': file.get('name'), 'createdTime': file.get('createdTime'), 'parent': file.get('parents')[0]})
-
-    if(not folders):
-        return None
-    if(len(folders)==1):
-        return folders[0]
+def share_callback(request_id, response, exception):
+    if exception:
+        # Handle error
+        print(exception)
     else:
-        print("There are multiple directories with the same name:")
-        for index, folder in enumerate(folders):
-            sys.stdout.write(str(index+1) +") %s created: %s\n" % (folder['name'], str(folder['createdTime'])))
+        print("File shared")
 
-        while True:
-            try:
-                selection = int(input("Enter an option number: "))
-                return folders[selection]
-                break;
-            except ValueError:
-                pass     
 
-def get_folder_parent_and_name(id):
+def share_file(filename, emails):
+    fileid = find_file_id(filename)['id']
     service = get_service()
-    response = service.files().get(fileId=id,
-                                    fields='name, parents').execute()
-    
-    return {'name': response.get('name'), 'parent': response.get('parents')[0] if(response.get('parents')) else 'root'}
+    batch = service.new_batch_http_request(callback=share_callback)
+    for email in emails:
+        user_permission = {
+            'type': 'user',
+            'role': 'writer',
+            'emailAddress': email
+        }
+        batch.add(service.permissions().create(
+                fileId=fileid,
+                body=user_permission,
+                fields='id',
+        ))
+    batch.execute()
+
+            
+
     
 def push_file(filename, parent=None):
     """Uploads a file to google drive"""
@@ -147,3 +141,39 @@ def get_service():
 def exponetialBackoff(n):
     time.sleep((2 ** n) + (random.randint(0, 1000) / 1000))
 
+def find_folder_id(name):
+    return find_file_id(name, mimetype='application/vnd.google-apps.folder')
+         
+def find_file_id(name, mimetype=None):
+    service = get_service()
+    response = service.files().list(q="name='"+name+"' and '"+cwd_id
+                                    +"' in parents" + (" and mimeType='"+mimetype+"'" if mimetype else ""),
+                                    fields='files(id, name, createdTime, parents)').execute()
+    files = []
+    for file in response.get('files', []):
+        files.append({'id': file.get('id'),'name': file.get('name'), 'createdTime': file.get('createdTime'), 'parent': file.get('parents')[0]})
+
+    if(not files):
+        return None
+    if(len(files)==1):
+        return files[0]
+    else:
+        print("There are multiple options with the same name:")
+        for index, file in enumerate(files):
+            sys.stdout.write(str(index+1) +") %s created: %s\n" % (file['name'], str(file['createdTime'])))
+
+        while True:
+            try:
+                selection = int(input("Enter an option number: "))
+                return files[selection]
+                break;
+            except ValueError:
+                pass
+
+
+def get_folder_parent_and_name(id):
+    service = get_service()
+    response = service.files().get(fileId=id,
+                                    fields='name, parents').execute()
+    
+    return {'name': response.get('name'), 'parent': response.get('parents')[0] if(response.get('parents')) else 'root'}

@@ -85,11 +85,6 @@ That said, you can use or modify the code in this project in any way you want, b
  
 if you have any comments about the project, you can send me an email to: comeoes@gmail.com or make an issue. 
 
-
- 
-> So that I can continue to use computers without dishonor, I have decided to put together a sufficient body of free software so that I will be able to get along without any software that is not free. 
-
-_GNU founder, Richard Stallman._ 
  
 
 

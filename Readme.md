@@ -22,24 +22,16 @@ git clone https://github.com/cosmeoes/clgdrive.git
 To use the google drive api you have to have a client id and client secret.
  
 To generate them, let's follow this edited version of the [google quickstart guide](https://developers.google.com/drive/v3/web/quickstart/python#step_1_turn_on_the_api_name): 
-
-    * Use this [wizard](https://console.developers.google.com/start/api?id=drive) to create or select a project in the Google Developers Console and automatically turn on the API. Click Continue, then Go to credentials. 
-
-    * On the Add credentials to your project page, click the Cancel button. 
-
-    * At the top of the page, select the OAuth consent screen tab. Select an Email address, enter a Product name if not already set, and click the Save button. 
-
-    * Select the Credentials tab, click the Create credentials button and select OAuth client ID. 
-
-    * Select the application type Other, enter the name "cldrive", and click the Create button. 
-
-    * Click OK to dismiss the resulting dialog. 
-
-    * Click the file_download (Download JSON) button to the right of the client ID. 
-
-    * Move this file to directory you downloaded or cloned the project and rename it client_secret.json. 
+  1. Use this [wizard](https://console.developers.google.com/start/api?id=drive) to create or select a project in the Google Developers Console and automatically turn on the API. Click Continue, then Go to credentials. 
+  2. On the Add credentials to your project page, click the Cancel button. 
+  3. At the top of the page, select the OAuth consent screen tab. Select an Email address, enter a Product name if not already set, and click the Save button. 
+  4. Select the Credentials tab, click the Create credentials button and select OAuth client ID. 
+  5. Select the application type Other, enter the name "cldrive", and click the Create button. 
+  6. Click OK to dismiss the resulting dialog.  
+  7. Click the file_download (Download JSON) button to the right of the client ID. 
+  8. Move this file to directory you downloaded or cloned the project and rename it client_secret.json. 
  
-###Dependencies  
+### Dependencies  
 This project has the next dependencies: 
 - [google-api-python-client](https://developers.google.com/api-client-library/python/) 
 - [python-magic](https://github.com/ahupp/python-magic) 
@@ -52,58 +44,38 @@ pip install python-magic
  
 ## Usage 
 To run clgdrive, run: 
-''' 
+```
 python clgdrive.py 
-''' 
+``` 
 A browser window will open asking you to log into your google account and give the application permission to manage your drive files. 
 Once that is done a interactive shell will appear. 
  
 Here is a list of commands you can use: 
-        -**cd**: changes the current working directory, it takes an optional argument dir. 
-          - usage: cd [-h] [dir] 
- 
-          positional arguments: 
-                  dir         Change the working directory 
- 
-          optional arguments: 
-                  -h, --help  show this help message and exit 
- 
-        -**ls**: list the files in the given directory, if none is given list the files in the current working directory. 
-         -usage: ls [-h] [dir] 
- 
-         positional arguments: 
-                  dir         the directory to list 
- 
-         optional arguments: 
-                  -h, --help  show this help message and exit  
-        -**push*: uploads a file to the current working directory. 
-         -usage: push [-h] [-r] files [files ...] 
- 
-         positional arguments: 
-                   files            the files to upload 
- 
-         optional arguments: 
-                   -h, --help       show this help message and exit 
-                  -r, --recursive  upload a directory recursively 
-        -**pull**: downloads a file from the current working directory. 
-         -usage: pull [-h] [-d directory] files [files ...] 
- 
-        positional arguments: 
-                  files                 Files to download 
- 
-        optional arguments: 
-                  -h, --help            show this help message and exit 
-                  -d directory, --directory directory   
+
+- **cd**: changes the current working directory, it takes an optional argument dir.
+  - usage: cd [-h] [dir]
+    - dir         Change the working directory 
+    - -h, --help  show this help message and exit 
+- **ls**: list the files in the given directory, if none is given list the files in the current working directory. 
+  - usage: ls [-h] [dir] 
+    - dir         the directory to list 
+    - -h, --help  show this help message and exit  
+- **push**: uploads a file to the current working directory. 
+  - usage: push [-h] [-r] files [files ...]    
+    - files            the files to upload
+    - -h, --help       show this help message and exit 
+    - -r, --recursive  upload a directory recursively 
+- **pull**: downloads a file from the current working directory. 
+  - usage: pull [-h] [-d directory] files [files ...]
+    - files                 Files to download  
+    - -h, --help            show this help message and exit
+    - -d directory, --directory directory   
                                       Specify where to save the file 
-        -**share**: shares a file with the people with giving emails. 
-         -usage: share [-h] files emails [emails ...] 
- 
-         positional arguments: 
-                  files       The file to share 
-                  emails      The people you want to share the file with 
- 
-        optional arguments: 
-                  -h, --help  show this help message and exit 
+- **share**: shares a file with the people with giving emails. 
+  - usage: share [-h] files emails [emails ...]   
+    - files       The file to share 
+    - emails      The people you want to share the file with 
+    - -h, --help  show this help message and exit 
  
 ## Creator comments 
 This tool isn't completed and it lack a lot of features, also, some of the current ones may fail. Keep that in mind while using it. 

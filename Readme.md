@@ -4,10 +4,10 @@
 clgdrive is command line interface for google drive. 
  
 Currently it only supports: 
-        -Listing files 
-        -Uploading files and folders 
-        -Downloading files, but not folders 
-        -Sharing a file or folder with multiple users 
+  * Listing files 
+  * Uploading files and folders 
+  * Downloading files, but not folders 
+  * Sharing a file or folder with multiple users 
  
 It lacks a great deal of features that i would like to implement. 
  

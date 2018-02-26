@@ -79,9 +79,9 @@ Here is a list of commands you can use:
     - -h, --help  show this help message and exit 
  
 ## Creator comments 
-This tool isn't completed and it lack a lot of features, also, some of the current ones may fail. Keep that in mind while using it. 
+This tool isn't completed and it lacks a lot of features, also, some of the current ones may fail. Keep that in mind while using it. 
  
-That said, you can use or modify the code in this project in any way you want, but that's implicit by publishing in github. 
+With that said, you can use or modify the code in this project in any way you want, but that's implicit by publishing in github. 
  
 if you have any comments about the project, you can send me an email to: comeoes@gmail.com or make an issue. 
 

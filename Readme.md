@@ -49,7 +49,8 @@ python clgdrive.py
 ``` 
 A browser window will open asking you to log into your google account and give the application permission to manage your drive files. 
 Once that is done a interactive shell will appear. 
- 
+
+### Commands.
 Here is a list of commands you can use: 
 
 - **cd**: changes the current working directory, it takes an optional argument dir.

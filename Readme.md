@@ -1,7 +1,7 @@
-# cldrive 
+# clgdrive 
  
  
-cldrive is command line interface for google drive. 
+clgdrive is command line interface for google drive. 
  
 Currently it only supports: 
         -Listing files 

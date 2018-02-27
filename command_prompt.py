@@ -64,7 +64,7 @@ class ClDrivePrompt(Cmd):
             return
 
 
-        folder = drive.find_folder_id(parsed.dir)
+        folder = drive.find_folder_data(parsed.dir)
         if(folder):
             self.prompt = "["+parsed.dir+"]> "
             drive.cwd_id = folder['id']
@@ -81,7 +81,7 @@ class ClDrivePrompt(Cmd):
             return parser
 
         if(parsed.dir):
-            folder = drive.find_folder_id(parsed.dir)
+            folder = drive.find_folder_data(parsed.dir)
             if(folder):
                 drive.list(folder['id'])
             else:    

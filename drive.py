@@ -206,10 +206,13 @@ def pull_folder(folders, topath="./", parent=cwd_id):
             print("Error: %s can't find" % topath)
             return 
         folderpath = os.path.join(topath, folder)
+        folder_data = find_folder_data(folder, parent)
+        if(not folder_data):
+            sys.stdout.write(f'Error: {folder} is not a folder\n')
+            return
         if not os.path.exists(folderpath):
             os.makedirs(folderpath)
             print("Created directory %s" % folderpath)
-        folder_data = find_folder_id(folder, parent)
         files = get_files_form_folder(folder_data['id'], all=True)
         fileid_list = []
         for file in files:
@@ -230,7 +233,7 @@ def get_service():
 def exponetialBackoff(n):
     time.sleep((2 ** n) + (random.randint(0, 1000) / 1000))
 
-def find_folder_id(name, parent=cwd_id):
+def find_folder_data(name, parent=cwd_id):
     return find_file_id(name, mimetype='application/vnd.google-apps.folder', parent=parent)
          
 def find_file_id(name, mimetype=None, parent=cwd_id):

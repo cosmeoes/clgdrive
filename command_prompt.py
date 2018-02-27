@@ -29,14 +29,17 @@ class ClDrivePrompt(Cmd):
             parser =ArgumentParser(prog="pull")
             parser.add_argument("files", nargs='+', help="Files to download")
             parser.add_argument("-d","--directory", metavar="directory", help="Specify where to save the file")
+            parser.add_argument("-r", "--recursive", action="store_true", help="download a folder recursively")
             return parser
-        if(parsed.directory):
+        if(parsed.recursive):
+            drive.pull_folder(parsed.files)
+        elif(parsed.directory):
             if(not os.path.exists(os.path.dirname(parsed.directory))):
                 print("Can't find %s" % parsed.directory)
                 return
-            drive.pull_files(parsed.files,parsed.directory)
+            drive.pull_files_by_name(parsed.files,parsed.directory)
         else:
-            drive.pull_files(parsed.files)
+            drive.pull_files_by_name(parsed.files)
 
 
     @WrapperCmdLineArgParser()

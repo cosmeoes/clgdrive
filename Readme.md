@@ -54,30 +54,30 @@ Once that is done a interactive shell will appear.
 Here is a list of commands you can use: 
 
 - **cd**: changes the current working directory, it takes an optional argument dir.
-        - usage: cd [-h] [dir]
-          - dir         Change the working directory 
-          - -h, --help  show this help message and exit 
+  - usage: cd [-h] [dir]
+    - dir         Change the working directory 
+    - -h, --help  show this help message and exit 
 - **ls**: list the files in the given directory, if none is given list the files in the current working directory. 
-        - usage: ls [-h] [dir] 
-          - dir         the directory to list 
-          - -h, --help  show this help message and exit  
+  - usage: ls [-h] [dir] 
+    - dir         the directory to list 
+    - -h, --help  show this help message and exit  
 - **push**: uploads a file to the current working directory. 
-        - usage: push [-h] [-r] files [files ...]    
-          - files            the files to upload
-          - -h, --help       show this help message and exit 
-          - -r, --recursive  upload a directory recursively 
+  - usage: push [-h] [-r] files [files ...]    
+    - files            the files to upload
+    - -h, --help       show this help message and exit 
+    - -r, --recursive  upload a directory recursively 
 - **pull**: downloads a file from the current working directory. 
-        - usage: pull [-h] [-d directory] files [files ...]
-          - files                 Files to download  
-          - -h, --help            show this help message and exit
-          - -d directory, --directory directory   
+  - usage: pull [-h] [-d directory] files [files ...]
+    - files                 Files to download  
+    - -h, --help            show this help message and exit
+    - -d directory, --directory directory   
                                       Specify where to save the file
-          - -r, --recursive  download a directory recursively
+    - -r, --recursive  upload a directory recursively
 - **share**: shares a file with the people with giving emails. 
-        - usage: share [-h] files emails [emails ...]   
-          - files       The file to share 
-          - emails      The people you want to share the file with 
-          - -h, --help  show this help message and exit 
+  - usage: share [-h] files emails [emails ...]   
+    - files       The file to share 
+    - emails      The people you want to share the file with 
+    - -h, --help  show this help message and exit 
  
 ## Creator comments 
 This tool isn't completed and it lacks a lot of features, also, some of the current ones may fail. Keep that in mind while using it. 

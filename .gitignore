@@ -2,3 +2,4 @@
 __pycache__/
 __init__.py
 client_secret.json
+.vscode

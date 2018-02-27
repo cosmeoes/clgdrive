@@ -1,3 +1,3 @@
-from test import test_drive
+from test import test_clgdrive
 import unittest
-unittest.main(module=test_drive)
+unittest.main(module=test_clgdrive)

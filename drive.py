@@ -56,7 +56,7 @@ def share_callback(request_id, response, exception):
 
 
 def share_file(filename, emails):
-    fileid = find_file_id(filename)['id']
+    fileid = find_file_data(filename)['id']
     service = get_service()
     batch = service.new_batch_http_request(callback=share_callback)
     for email in emails:
@@ -195,10 +195,15 @@ def pull_files_by_id(filelist, topath="./"):
         write_file_to_disk(output_file, fh.getvalue())
 
 def pull_files_by_name(filelist, topath="./"):
-    file_list = []
+    file_data_list = []
     for file in filelist:
-        file_list.append(find_file_id(file))
-    pull_files_by_id(file_list, topath) 
+        file_data = find_file_data(file)
+        if(not file_data):
+            sys.stout.write(f'{file} not found, skipping')
+            continue
+        file_data_list.append()
+
+    pull_files_by_id(file_data_list, topath) 
 
 def pull_folder(folders, topath="./", parent=cwd_id):
     for folder in folders:
@@ -234,9 +239,9 @@ def exponetialBackoff(n):
     time.sleep((2 ** n) + (random.randint(0, 1000) / 1000))
 
 def find_folder_data(name, parent=cwd_id):
-    return find_file_id(name, mimetype='application/vnd.google-apps.folder', parent=parent)
+    return find_file_data(name, mimetype='application/vnd.google-apps.folder', parent=parent)
          
-def find_file_id(name, mimetype=None, parent=cwd_id):
+def find_file_data(name, mimetype=None, parent=cwd_id):
     service = get_service()
     response = service.files().list(q="name='"+name+"' and '"+parent
                                     +"' in parents" + (" and mimeType='"+mimetype+"'" if mimetype else ""),
